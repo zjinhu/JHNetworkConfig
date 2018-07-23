@@ -112,12 +112,12 @@ static NSString *const keyNetworkConfigOhter   = @"keyNetworkConfigOhter";
 - (void)setDefaultNetwork {
     NSString *networkName = [self getDefaultNetworkName];
     NSArray *nameArray = self.networkDict.allKeys;
-    for (NSString *name in nameArray) {
+    [nameArray enumerateObjectsUsingBlock:^(NSString *name, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([name isEqualToString:networkName]) {
             [self setDefaultNetwork:name];
-            break;
+            *stop = YES;
         }
-    }
+    }];
 }
 
 // 获取网络环境名称
@@ -156,18 +156,17 @@ static NSString *const keyNetworkConfigOhter   = @"keyNetworkConfigOhter";
 
 // 获取开发网络环境地址
 - (NSString *)getDefaultNetworkHost {
-    NSString *networkUrl = nil;
+   __block NSString *networkUrl = nil;
     
     NSString *networkName = [NetworkUserDefault objectForKey:keyNetwork];
     NSArray *nameArray = self.networkDict.allKeys;
-    
-    for (NSString *name in nameArray) {
+ 
+    [nameArray enumerateObjectsUsingBlock:^(NSString *name, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([name isEqualToString:networkName]) {
             networkUrl = [self.networkDict objectForKey:name];
-            break;
+            *stop = YES;
         }
-    }
-    
+    }];
     return networkUrl;
 }
 
