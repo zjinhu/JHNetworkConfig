@@ -1,7 +1,7 @@
 # JHNetworkConfig
 网络环境变量配置
 代码参考 SYNetworkEnvironment 感谢SYNetworkEnvironment作者，我精简了部分代码和方法，直接拿来用了
-
+搭配JHNetworkModule使用，可以做到多重配置网络环境
 ##  使用方法
 适当位置配置网络环境
 ```objc
