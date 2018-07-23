@@ -12,7 +12,7 @@
 /************************************************************************/
 
 static NSString *const keyNetwork = @"JHNetworkSettingHost";
-
+static NSString *const urlNetwork = @"JHNetworkSettingHostURL";
 /************************************************************************/
 
 static NSString *const keyNetworkConfig        = @"keyNetworkConfig";
@@ -151,22 +151,25 @@ static NSString *const keyNetworkConfigOhter   = @"keyNetworkConfigOhter";
     if (name && 0 != name.length) {
         [NetworkUserDefault setObject:name forKey:keyNetwork];
         [NetworkUserDefault synchronize];
+        [self getDefaultNetworkHost];
     }
 }
 
 // 获取开发网络环境地址
 - (NSString *)getDefaultNetworkHost {
-   __block NSString *networkUrl = nil;
+    __block NSString *networkUrl = nil;
     
     NSString *networkName = [NetworkUserDefault objectForKey:keyNetwork];
     NSArray *nameArray = self.networkDict.allKeys;
- 
+    
     [nameArray enumerateObjectsUsingBlock:^(NSString *name, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([name isEqualToString:networkName]) {
             networkUrl = [self.networkDict objectForKey:name];
             *stop = YES;
         }
     }];
+    [NetworkUserDefault setObject:networkUrl forKey:urlNetwork];
+    [NetworkUserDefault synchronize];
     return networkUrl;
 }
 
@@ -240,7 +243,7 @@ static NSString *const keyNetworkConfigOhter   = @"keyNetworkConfigOhter";
 - (void)networkClick:(id)sender {
     NSLog(@"设置前：(%@)%@", [NetworkConfig getDefaultNetworkName], NetworkHost);
     typeof(self) __weak weakSelf = self;
-    NSString *name = [self getDefaultNetworkName];
+    NSString *name = [NetworkConfig getDefaultNetworkName];
     JHNetworkConfigViewController *vc = [[JHNetworkConfigViewController alloc] init];
     vc.configURLs = self.networkDict;
     vc.configName = name;
